@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  const int N = 4096;
+  const int N = 1024;
   vector<float> A(N*N);
   vector<float> B(N*N);
   vector<float> C(N*N, 0);
@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
   for(int irank=0; irank<size; irank++) {
     auto tic = chrono::steady_clock::now();
     offset = N/size*((rank+irank) % size);
+#pragma omp parallel for
     for (int i=0; i<N/size; i++)
         for (int k=0; k<N; k++)
       for (int j=0; j<N/size; j++)
